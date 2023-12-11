@@ -1,7 +1,7 @@
 {
-  "name": "on-leave-intent",
-  "version": "1.0.6",
-  "description": "A script to detect if the user is leaving the page and calls a function.",
+  "name": "itbi-county",
+  "version": "1.0.1",
+  "description": "A script to get values from ITBI in Brazil",
   "main": "lib/on-leave-intent.js",
   "scripts": {
     "build": "webpack",

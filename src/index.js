@@ -1,35 +1,38 @@
 /**
- * @class OnLeaveIntent
- * @description A class to check if the user is leaving the window
- * and run a callback when it happens.
- * @param callback - a function to run when the user is leaving the page
- * @param delay - time in milliseconds defined to start tracking the user
+ * @class Itbi
+ * @description A class to return the ITBI value of a county
+ * @param state - parameter to define the state UF
+ * @param county - parameter to define the county
+ * @param json_file - json file with the ITBI values
  */
-export default class OnLeaveIntent {
-  constructor(callback, delay) {
-    this.callback = callback
-    this.delay = delay
 
-    this.init()
+const spData = require('./states/sp.json')
+
+class Itbi {
+  constructor(state, county) {
+    this.state = state
+    this.county = county
+    this.json_file = spData
   }
 
-  init = () => {
-    this.timer = window.setTimeout(this.handleMouseOut, this.delay)
+  spItbi() {
+    return this.json_file[`${this.county}`]
   }
 
-  destroy = () => {
-    clearTimeout(this.timer)
-    document.removeEventListener('mouseout', this.checkOutOfBounds)
-  }
+  init() {
+    const stateMethod = `${this.state.toLowerCase()}Itbi`
 
-  checkOutOfBounds = e => {
-    if (e.relatedTarget === null) {
-      this.callback()
-      this.destroy()
+    if (typeof this[stateMethod] === 'function') {
+      const value = this[stateMethod]()
+      return parseFloat(value)
+    } else {
+      console.error(`Método para o estado ${this.state} não encontrado`)
     }
   }
 
-  handleMouseOut = () => {
-    document.addEventListener('mouseout', this.checkOutOfBounds)
+  all() {
+    return this.json_file
   }
 }
+
+export default Itbi

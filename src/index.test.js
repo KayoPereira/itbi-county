@@ -1,50 +1,24 @@
-import OnLeaveIntent from '.'
+import Itbi from '.'
+const spData = require('./states/sp.json')
 
-describe('OnLeaveIntent', () => {
-  let callback
-  let onLeaveIntent
-  const delay = 1000
-  jest.useFakeTimers()
+describe('Itbi', () => {
+  const ItbiAN = new Itbi('SP', 'anhembi', spData)
+  const ItbiSP = new Itbi('SP', 'são paulo', spData)
+  const ItbiSJRP = new Itbi('SP', 'são josé do rio preto', spData)
 
-  beforeEach(() => {
-    callback = jest.fn()
-    onLeaveIntent = new OnLeaveIntent(callback, delay)
+  it('should return the itbi value of Anhembi ', () => {
+    expect(ItbiAN.init()).toBe(4)
   })
 
-  it('should run the callback function if user goes out of the screen', () => {
-    jest.advanceTimersByTime(delay)
-    document.dispatchEvent(new MouseEvent('mouseout', { relatedTarget: null }))
-
-    expect(callback).toHaveBeenCalled()
+  it('should return the itbi value of São paulo ', () => {
+    expect(ItbiSP.init()).toBe(3)
   })
 
-  it('should not run the callback function if user moves inside the page', () => {
-    document.dispatchEvent(
-      new MouseEvent('mouseout', { relatedTarget: new EventTarget() })
-    )
-
-    expect(callback).not.toHaveBeenCalled()
+  it('should return the itbi value of São josé do rio preto ', () => {
+    expect(ItbiSJRP.init()).toBe(2)
   })
 
-  it('should not run the callback before the delay passed', () => {
-    document.dispatchEvent(new MouseEvent('mouseout'))
-
-    expect(callback).not.toHaveBeenCalled()
-  })
-
-  it('should remove the listener when destroyed ', () => {
-    onLeaveIntent.destroy()
-    jest.advanceTimersByTime(delay)
-    document.dispatchEvent(new MouseEvent('mouseout'))
-
-    expect(callback).not.toHaveBeenCalled()
-  })
-
-  it('should call the callback function only once', () => {
-    jest.advanceTimersByTime(delay)
-    document.dispatchEvent(new MouseEvent('mouseout'))
-    document.dispatchEvent(new MouseEvent('mouseout'))
-
-    expect(callback).toHaveBeenCalledTimes(1)
+  it('should return the itbi value of all counties ', () => {
+    expect(ItbiSP.all()).toEqual(spData)
   })
 })
